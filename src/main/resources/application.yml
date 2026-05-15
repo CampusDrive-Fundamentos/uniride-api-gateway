@@ -1,0 +1,83 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
+
+spring:
+  application:
+    name: uniride-api-gateway
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+              - OPTIONS
+            allowedHeaders: "*"
+      routes:
+        # === IAM SERVICE ===
+        - id: iam-auth
+          uri: http://iam-service:8081
+          predicates:
+            - Path=/api/v1/auth/**
+        - id: iam-users
+          uri: http://iam-service:8081
+          predicates:
+            - Path=/api/v1/users/**
+        - id: iam-swagger-ui
+          uri: http://iam-service:8081
+          predicates:
+            - Path=/iam/swagger-ui.html, /iam/swagger-ui/**, /iam/v3/api-docs/**
+          filters:
+            - RewritePath=/iam/(?<segment>.*), /${segment}
+        - id: iam-openapi
+          uri: http://iam-service:8081
+          predicates:
+            - Path=/iam/v3/api-docs
+          filters:
+            - RewritePath=/iam/(?<segment>.*), /${segment}
+
+        # === ROUTES SERVICE ===
+        - id: routes-service
+          uri: http://routes-service:8082
+          predicates:
+            - Path=/api/v1/routes/**
+        - id: routes-swagger-ui
+          uri: http://routes-service:8082
+          predicates:
+            - Path=/routes/swagger-ui.html, /routes/swagger-ui/**, /routes/v3/api-docs/**
+          filters:
+            - RewritePath=/routes/(?<segment>.*), /${segment}
+        - id: routes-openapi
+          uri: http://routes-service:8082
+          predicates:
+            - Path=/routes/v3/api-docs
+          filters:
+            - RewritePath=/routes/(?<segment>.*), /${segment}
+
+        # === BOOKING SERVICE ===
+        - id: booking-service
+          uri: http://booking-service:8083
+          predicates:
+            - Path=/api/v1/bookings/**
+        - id: booking-swagger-ui
+          uri: http://booking-service:8083
+          predicates:
+            - Path=/bookings/swagger-ui.html, /bookings/swagger-ui/**, /bookings/v3/api-docs/**
+          filters:
+            - RewritePath=/bookings/(?<segment>.*), /${segment}
+        - id: booking-openapi
+          uri: http://booking-service:8083
+          predicates:
+            - Path=/bookings/v3/api-docs
+          filters:
+            - RewritePath=/bookings/(?<segment>.*), /${segment}
