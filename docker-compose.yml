@@ -1,0 +1,144 @@
+services:
+  # ==========================================
+  # DATABASES
+  # ==========================================
+  iam-db:
+    image: postgres:15
+    container_name: uniride-iam-db
+    environment:
+      POSTGRES_DB: iam_db
+      POSTGRES_USER: campusdrive_user
+      POSTGRES_PASSWORD: campusdrive_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - iam_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U campusdrive_user -d iam_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - uniride-network
+
+  routes-db:
+    image: postgis/postgis:16-3.4
+    container_name: uniride-routes-db
+    environment:
+      POSTGRES_DB: uniride_routes
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5434:5432"
+    volumes:
+      - routes_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d uniride_routes"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - uniride-network
+
+  booking-db:
+    image: postgres:15
+    container_name: uniride-booking-db
+    environment:
+      POSTGRES_DB: uniride_bookings
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - booking_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d uniride_bookings"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - uniride-network
+
+  # ==========================================
+  # MICROSERVICES
+  # ==========================================
+  iam-service:
+    build:
+      context: ../uniride-iam-service/uniride-iam-service
+      dockerfile: Dockerfile
+    container_name: uniride-iam-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://iam-db:5432/iam_db
+      - SPRING_DATASOURCE_USERNAME=campusdrive_user
+      - SPRING_DATASOURCE_PASSWORD=campusdrive_password
+      - JWT_SECRET=campusdrive_jwt_secret_key_2024_uniride_v1
+    depends_on:
+      iam-db:
+        condition: service_healthy
+    networks:
+      - uniride-network
+
+  routes-service:
+    build:
+      context: ../uniride-routes-service
+      dockerfile: Dockerfile
+    container_name: uniride-routes-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://routes-db:5432/uniride_routes
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - JWT_SECRET=campusdrive_jwt_secret_key_2024_uniride_v1
+    depends_on:
+      routes-db:
+        condition: service_healthy
+    networks:
+      - uniride-network
+
+  booking-service:
+    build:
+      context: ../uniride-booking-service
+      dockerfile: Dockerfile
+    container_name: uniride-booking-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://booking-db:5432/uniride_bookings
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - ROUTES_SERVICE_URL=http://routes-service:8082/api/v1/routes
+      - JWT_SECRET=campusdrive_jwt_secret_key_2024_uniride_v1
+    depends_on:
+      booking-db:
+        condition: service_healthy
+    networks:
+      - uniride-network
+
+  # ==========================================
+  # API GATEWAY
+  # ==========================================
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: uniride-api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - iam-service
+      - routes-service
+      - booking-service
+    networks:
+      - uniride-network
+
+volumes:
+  iam_data:
+  routes_data:
+  booking_data:
+
+networks:
+  uniride-network:
+    driver: bridge
