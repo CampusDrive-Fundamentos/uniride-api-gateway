@@ -81,3 +81,39 @@ spring:
             - Path=/bookings/v3/api-docs
           filters:
             - RewritePath=/bookings/(?<segment>.*), /${segment}
+
+        # === FINANCE SERVICE ===
+        - id: finance-service
+          uri: http://finance-service:8084
+          predicates:
+            - Path=/api/v1/finance/**
+        - id: finance-swagger-ui
+          uri: http://finance-service:8084
+          predicates:
+            - Path=/finance/swagger-ui.html, /finance/swagger-ui/**, /finance/v3/api-docs/**
+          filters:
+            - RewritePath=/finance/(?<segment>.*), /${segment}
+        - id: finance-openapi
+          uri: http://finance-service:8084
+          predicates:
+            - Path=/finance/v3/api-docs
+          filters:
+            - RewritePath=/finance/(?<segment>.*), /${segment}
+
+        # === TRIPS SERVICE ===
+        - id: trips-service
+          uri: http://trips-service:8085
+          predicates:
+            - Path=/api/v1/trips/**
+        - id: trips-swagger-ui
+          uri: http://trips-service:8085
+          predicates:
+            - Path=/trips/swagger-ui.html, /trips/swagger-ui/**, /trips/v3/api-docs/**
+          filters:
+            - RewritePath=/trips/(?<segment>.*), /${segment}
+        - id: trips-openapi
+          uri: http://trips-service:8085
+          predicates:
+            - Path=/trips/v3/api-docs
+          filters:
+            - RewritePath=/trips/(?<segment>.*), /${segment}
