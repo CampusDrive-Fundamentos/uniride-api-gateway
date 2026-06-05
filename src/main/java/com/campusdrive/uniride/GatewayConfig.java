@@ -43,6 +43,26 @@ public class GatewayConfig {
                         .filters(f -> f.rewritePath("/bookings/swagger-ui.html", "/swagger-ui.html"))
                         .uri("http://booking-service:8083"))
 
+                // === FINANCE SERVICE ===
+                .route("finance-service", r -> r.path("/api/v1/finance/**")
+                        .uri("http://finance-service:8084"))
+                .route("finance-swagger-ui", r -> r.path("/finance/swagger-ui/**", "/finance/v3/api-docs/**", "/finance/swagger-resources/**")
+                        .filters(f -> f.rewritePath("/finance/(?<segment>.*)", "/${segment}"))
+                        .uri("http://finance-service:8084"))
+                .route("finance-swagger-html", r -> r.path("/finance/swagger-ui.html")
+                        .filters(f -> f.rewritePath("/finance/swagger-ui.html", "/swagger-ui.html"))
+                        .uri("http://finance-service:8084"))
+
+                // === TRIPS SERVICE ===
+                .route("trips-service", r -> r.path("/api/v1/trips/**")
+                        .uri("http://trips-service:8085"))
+                .route("trips-swagger-ui", r -> r.path("/trips/swagger-ui/**", "/trips/v3/api-docs/**", "/trips/swagger-resources/**")
+                        .filters(f -> f.rewritePath("/trips/(?<segment>.*)", "/${segment}"))
+                        .uri("http://trips-service:8085"))
+                .route("trips-swagger-html", r -> r.path("/trips/swagger-ui.html")
+                        .filters(f -> f.rewritePath("/trips/swagger-ui.html", "/swagger-ui.html"))
+                        .uri("http://trips-service:8085"))
+
                 .build();
     }
 }
