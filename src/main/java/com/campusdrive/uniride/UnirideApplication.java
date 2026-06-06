@@ -5,7 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(excludeName = {
 		"org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration",
-		"org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration"
+		"org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration",
+		"org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration",
+		"org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration"
 })
 public class UnirideApplication {
 
