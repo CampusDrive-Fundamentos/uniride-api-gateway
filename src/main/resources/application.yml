@@ -16,6 +16,8 @@ spring:
           httpclient:
             ssl:
               use-insecure-trust-manager: true
+          default-filters:
+            - RemoveRequestHeader=Host
           globalcors:
             corsConfigurations:
               '[/**]':
