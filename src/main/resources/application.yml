@@ -17,7 +17,9 @@ spring:
             ssl:
               use-insecure-trust-manager: true
           default-filters:
-            - RemoveRequestHeader=Host
+            - RemoveRequestHeader=X-Forwarded-Host
+            - RemoveRequestHeader=X-Forwarded-Proto
+            - RemoveRequestHeader=X-Forwarded-Port
           globalcors:
             corsConfigurations:
               '[/**]':
