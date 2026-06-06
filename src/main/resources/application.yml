@@ -25,96 +25,62 @@ spring:
             allowedHeaders: "*"
       routes:
         # === IAM SERVICE ===
-        - id: iam-auth
-          uri: http://iam-service:8081
+        - id: iam-service
+          uri: ${IAM_SERVICE_URL:http://iam-service:8081}
           predicates:
-            - Path=/api/v1/auth/**
-        - id: iam-users
-          uri: http://iam-service:8081
+            - Path=/api/v1/auth/**, /api/v1/users/**
+        - id: iam-swagger
+          uri: ${IAM_SERVICE_URL:http://iam-service:8081}
           predicates:
-            - Path=/api/v1/users/**
-        - id: iam-swagger-ui
-          uri: http://iam-service:8081
-          predicates:
-            - Path=/iam/swagger-ui.html, /iam/swagger-ui/**, /iam/v3/api-docs/**
-          filters:
-            - RewritePath=/iam/(?<segment>.*), /${segment}
-        - id: iam-openapi
-          uri: http://iam-service:8081
-          predicates:
-            - Path=/iam/v3/api-docs
+            - Path=/iam/swagger-ui.html, /iam/swagger-ui/**, /iam/v3/api-docs/**, /iam/v3/api-docs
           filters:
             - RewritePath=/iam/(?<segment>.*), /${segment}
 
         # === ROUTES SERVICE ===
         - id: routes-service
-          uri: http://routes-service:8082
+          uri: ${ROUTES_SERVICE_URL:http://routes-service:8082}
           predicates:
             - Path=/api/v1/routes/**
-        - id: routes-swagger-ui
-          uri: http://routes-service:8082
+        - id: routes-swagger
+          uri: ${ROUTES_SERVICE_URL:http://routes-service:8082}
           predicates:
-            - Path=/routes/swagger-ui.html, /routes/swagger-ui/**, /routes/v3/api-docs/**
-          filters:
-            - RewritePath=/routes/(?<segment>.*), /${segment}
-        - id: routes-openapi
-          uri: http://routes-service:8082
-          predicates:
-            - Path=/routes/v3/api-docs
+            - Path=/routes/swagger-ui.html, /routes/swagger-ui/**, /routes/v3/api-docs/**, /routes/v3/api-docs
           filters:
             - RewritePath=/routes/(?<segment>.*), /${segment}
 
         # === BOOKING SERVICE ===
         - id: booking-service
-          uri: http://booking-service:8083
+          uri: ${BOOKING_SERVICE_URL:http://booking-service:8083}
           predicates:
             - Path=/api/v1/bookings/**
-        - id: booking-swagger-ui
-          uri: http://booking-service:8083
+        - id: booking-swagger
+          uri: ${BOOKING_SERVICE_URL:http://booking-service:8083}
           predicates:
-            - Path=/bookings/swagger-ui.html, /bookings/swagger-ui/**, /bookings/v3/api-docs/**
-          filters:
-            - RewritePath=/bookings/(?<segment>.*), /${segment}
-        - id: booking-openapi
-          uri: http://booking-service:8083
-          predicates:
-            - Path=/bookings/v3/api-docs
+            - Path=/bookings/swagger-ui.html, /bookings/swagger-ui/**, /bookings/v3/api-docs/**, /bookings/v3/api-docs
           filters:
             - RewritePath=/bookings/(?<segment>.*), /${segment}
 
         # === FINANCE SERVICE ===
         - id: finance-service
-          uri: http://finance-service:8084
+          uri: ${FINANCE_SERVICE_URL:http://finance-service:8084}
           predicates:
             - Path=/api/v1/finance/**
-        - id: finance-swagger-ui
-          uri: http://finance-service:8084
+        - id: finance-swagger
+          uri: ${FINANCE_SERVICE_URL:http://finance-service:8084}
           predicates:
-            - Path=/finance/swagger-ui.html, /finance/swagger-ui/**, /finance/v3/api-docs/**
-          filters:
-            - RewritePath=/finance/(?<segment>.*), /${segment}
-        - id: finance-openapi
-          uri: http://finance-service:8084
-          predicates:
-            - Path=/finance/v3/api-docs
+            - Path=/finance/swagger-ui.html, /finance/swagger-ui/**, /finance/v3/api-docs/**, /finance/v3/api-docs
           filters:
             - RewritePath=/finance/(?<segment>.*), /${segment}
 
         # === TRIPS SERVICE ===
         - id: trips-service
-          uri: http://trips-service:8085
+          uri: ${TRIPS_SERVICE_URL:http://trips-service:8085}
           predicates:
             - Path=/api/v1/trips/**
-        - id: trips-swagger-ui
-          uri: http://trips-service:8085
+        - id: trips-swagger
+          uri: ${TRIPS_SERVICE_URL:http://trips-service:8085}
           predicates:
-            - Path=/trips/swagger-ui.html, /trips/swagger-ui/**, /trips/v3/api-docs/**
-          filters:
-            - RewritePath=/trips/(?<segment>.*), /${segment}
-        - id: trips-openapi
-          uri: http://trips-service:8085
-          predicates:
-            - Path=/trips/v3/api-docs
+            - Path=/trips/swagger-ui.html, /trips/swagger-ui/**, /trips/v3/api-docs/**, /trips/v3/api-docs
           filters:
             - RewritePath=/trips/(?<segment>.*), /${segment}
 
@@ -123,4 +89,5 @@ management:
     web:
       exposure:
         include: health
+
 
