@@ -13,6 +13,9 @@ spring:
     gateway:
       server:
         webflux:
+          httpclient:
+            ssl:
+              use-insecure-trust-manager: true
           globalcors:
             corsConfigurations:
               '[/**]':
