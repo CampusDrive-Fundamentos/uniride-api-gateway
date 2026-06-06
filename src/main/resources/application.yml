@@ -117,3 +117,10 @@ spring:
             - Path=/trips/v3/api-docs
           filters:
             - RewritePath=/trips/(?<segment>.*), /${segment}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
