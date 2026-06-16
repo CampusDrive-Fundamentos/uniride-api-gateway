@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>UniRide API Portal</title>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
+    <link rel="icon" type="image/png" href="https://unpkg.com/swagger-ui-dist@5/favicon-32x32.png" sizes="32x32" />
+    <style>
+        html { box-sizing: border-box; overflow-y: scroll; }
+        *, *:before, *:after { box-sizing: inherit; }
+        body { margin: 0; background: #fafafa; }
+        /* Add some customized styles to match UniRide's aesthetics */
+        .swagger-ui .topbar { background-color: #1a1f2c; }
+        .swagger-ui .topbar .download-url-wrapper input,
+        .swagger-ui .topbar .download-url-wrapper .download-url-button {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js" charset="UTF-8"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js" charset="UTF-8"></script>
+    <script>
+        window.onload = function() {
+            const ui = SwaggerUIBundle({
+                urls: [
+                    { name: "IAM Service", url: "/iam/v3/api-docs" },
+                    { name: "Routes Service", url: "/routes/v3/api-docs" },
+                    { name: "Booking Service", url: "/bookings/v3/api-docs" },
+                    { name: "Finance Service", url: "/finance/v3/api-docs" },
+                    { name: "Trips Service", url: "/trips/v3/api-docs" }
+                ],
+                dom_id: '#swagger-ui',
+                deepLinking: true,
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIStandalonePreset
+                ],
+                plugins: [
+                    SwaggerUIBundle.plugins.DownloadUrl
+                ],
+                layout: "StandaloneLayout"
+            });
+            window.ui = ui;
+        };
+    </script>
+</body>
+</html>
