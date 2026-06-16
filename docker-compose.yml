@@ -112,6 +112,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=campusdrive_user
       - SPRING_DATASOURCE_PASSWORD=campusdrive_password
       - JWT_SECRET=campusdrive_jwt_secret_key_2024_uniride_v1
+      - SPRINGDOC_API_DOCS_SERVERS_0_URL=/
     depends_on:
       iam-db:
         condition: service_healthy
@@ -130,6 +131,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=1234
       - JWT_SECRET=campusdrive_jwt_secret_key_2024_uniride_v1
+      - SPRINGDOC_API_DOCS_SERVERS_0_URL=/
     depends_on:
       routes-db:
         condition: service_healthy
@@ -149,6 +151,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=postgres
       - ROUTES_SERVICE_URL=http://routes-service:8082/api/v1/routes
       - JWT_SECRET=campusdrive_jwt_secret_key_2024_uniride_v1
+      - SPRINGDOC_API_DOCS_SERVERS_0_URL=/
     depends_on:
       booking-db:
         condition: service_healthy
@@ -167,6 +170,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - JWT_SECRET=campusdrive_jwt_secret_key_2024_uniride_v1
+      - SPRINGDOC_API_DOCS_SERVERS_0_URL=/
     depends_on:
       finance-db:
         condition: service_healthy
@@ -186,6 +190,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=12345678
       - JWT_SECRET=campusdrive_jwt_secret_key_2024_uniride_v1
       - FINANCE_SERVICE_URL=http://finance-service:8084/api/v1/finance
+      - SPRINGDOC_API_DOCS_SERVERS_0_URL=/
     depends_on:
       trips-db:
         condition: service_healthy
