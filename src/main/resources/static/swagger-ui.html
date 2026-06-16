@@ -23,6 +23,9 @@
     <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js" charset="UTF-8"></script>
     <script>
         window.onload = function() {
+            // Gateway base URL — all requests go through here
+            const GATEWAY_URL = window.location.origin;
+
             const ui = SwaggerUIBundle({
                 urls: [
                     { name: "IAM Service", url: "/iam/v3/api-docs" },
@@ -40,7 +43,12 @@
                 plugins: [
                     SwaggerUIBundle.plugins.DownloadUrl
                 ],
-                layout: "StandaloneLayout"
+                layout: "StandaloneLayout",
+                // Intercept every request and rewrite internal Docker URLs to the gateway
+                requestInterceptor: function(req) {
+                    req.url = req.url.replace(/http:\/\/[a-zA-Z0-9_-]+:\d+/g, GATEWAY_URL);
+                    return req;
+                }
             });
             window.ui = ui;
         };
