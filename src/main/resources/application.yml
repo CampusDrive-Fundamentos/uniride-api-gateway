@@ -17,6 +17,7 @@ spring:
             ssl:
               use-insecure-trust-manager: true
           default-filters:
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Methods Access-Control-Allow-Headers, RETAIN_LAST
             - RemoveRequestHeader=X-Forwarded-Host
             - RemoveRequestHeader=X-Forwarded-Proto
             - RemoveRequestHeader=X-Forwarded-Port
